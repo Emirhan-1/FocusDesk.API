@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FocusDesk.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+82a9ed637f86675df117fc040f02a429c2628e35")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+677e15626bdb491e4be79fe8b2d38e635a931715")]
 [assembly: System.Reflection.AssemblyProductAttribute("FocusDesk.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FocusDesk.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
