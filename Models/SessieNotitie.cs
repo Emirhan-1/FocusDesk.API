@@ -1,15 +1,16 @@
-﻿namespace FocusDesk.API.Models
+﻿namespace FocusDesk.API.Models;
+
+public class Sessienotitie
 {
-    public class Sessienotitie
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public string Inhoud { get; set; }
+    public string Inhoud { get; set; } = string.Empty;
 
-        public DateTime AangemaaktOp { get; set; }
+    public DateTime AangemaaktOp { get; set; }
 
-        public int StudiesessieId { get; set; }
+    public string Type { get; set; } = "student"; // student of coach
 
-        public Studiesessie Studiesessie { get; set; }
-    }
+    public int StudiesessieId { get; set; }
+
+    public Studiesessie Studiesessie { get; set; } = null!;
 }
