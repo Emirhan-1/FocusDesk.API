@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FocusDesk.API.Models;
 
+namespace FocusDesk.API.Data;
+
 public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
@@ -14,7 +16,7 @@ public class AppDbContext : DbContext
 
     public DbSet<Tag> Tags { get; set; }
 
-    public DbSet<Studiedoel> Studiedoelen { get; set; }
+    public DbSet<StudieDoel> StudieDoelen { get; set; }
 
-    public DbSet<Sessienotitie> Sessienotities { get; set; }
+    public DbSet<Sessienotitie> SessieNotities { get; set; }
 }

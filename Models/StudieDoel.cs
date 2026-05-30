@@ -1,12 +1,12 @@
 ﻿namespace FocusDesk.API.Models;
 
-public class Studiedoel
+public class StudieDoel
 {
     public int Id { get; set; }
 
     public string Titel { get; set; } = string.Empty;
 
-    public int Doelwaarde { get; set; }
+    public int DoelUren { get; set; }
 
     public int GebruikerId { get; set; }
 

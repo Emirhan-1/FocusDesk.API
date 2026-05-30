@@ -1,70 +1,98 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FocusDesk.API.Models;
+﻿using FocusDesk.API.DTOs;
+using FocusDesk.API.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-namespace FocusDesk.API.Controllers
+namespace FocusDesk.API.Controllers;
+
+[Authorize]
+[ApiController]
+[Route("api/[controller]")]
+public class StudiesessieController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class StudiesessieController : ControllerBase
+    private readonly StudiesessieService _studiesessieService;
+
+    public StudiesessieController(StudiesessieService studiesessieService)
     {
-        private readonly AppDbContext _context;
+        _studiesessieService = studiesessieService;
+    }
 
-        public StudiesessieController(AppDbContext context)
+    // GET alle sessies
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var sessies = await _studiesessieService.GetAll();
+
+        return Ok(sessies);
+    }
+
+    // GET sessie op ID
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var sessie = await _studiesessieService.GetById(id);
+
+        if (sessie == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        // 🔹 GET alle sessies
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var sessies = await _context.Studiesessies
-                .Include(s => s.Notities)
-                .Include(s => s.Tag)
-                .ToListAsync();
+        return Ok(sessie);
+    }
 
-            return Ok(sessies);
+    // POST nieuwe sessie
+    [HttpPost]
+    public async Task<IActionResult> Create(MaakStudieSessieDTO dto)
+    {
+        var sessie = await _studiesessieService.Create(dto);
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = sessie.Id },
+            sessie
+        );
+    }
+
+    // DELETE sessie
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var success = await _studiesessieService.Delete(id);
+
+        if (!success)
+        {
+            return NotFound();
         }
 
-        // 🔹 GET sessie op ID
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        return NoContent();
+    }
+
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(
+    int id,
+    BewerkStudiesessieDTO dto)
+    {
+        var sessie = await _studiesessieService
+            .Update(id, dto);
+
+        if (sessie == null)
         {
-            var sessie = await _context.Studiesessies
-                .Include(s => s.Notities)
-                .Include(s => s.Tag)
-                .FirstOrDefaultAsync(s => s.Id == id);
-
-            if (sessie == null)
-                return NotFound();
-
-            return Ok(sessie);
+            return NotFound();
         }
 
-        // 🔹 POST nieuwe sessie (201 Created)
-        [HttpPost]
-        public async Task<IActionResult> Create(Studiesessie sessie)
+        return Ok(sessie);
+    }
+
+    [HttpGet("totale-studietijd")]
+    public async Task<IActionResult> GetTotaleStudietijd()
+    {
+        var totaal = await _studiesessieService
+            .GetTotaleStudietijd();
+
+        return Ok(new
         {
-            _context.Studiesessies.Add(sessie);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetById), new { id = sessie.Id }, sessie);
-        }
-
-        // 🔹 DELETE sessie
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var sessie = await _context.Studiesessies.FindAsync(id);
-
-            if (sessie == null)
-                return NotFound();
-
-            _context.Studiesessies.Remove(sessie);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
+            totaleStudietijd = totaal
+        });
     }
 }

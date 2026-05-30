@@ -18,7 +18,8 @@ namespace FocusDesk.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    WachtwoordHash = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    WachtwoordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Rol = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -40,20 +41,20 @@ namespace FocusDesk.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Studiedoelen",
+                name: "StudieDoelen",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Titel = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Doelwaarde = table.Column<int>(type: "int", nullable: false),
+                    DoelUren = table.Column<int>(type: "int", nullable: false),
                     GebruikerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Studiedoelen", x => x.Id);
+                    table.PrimaryKey("PK_StudieDoelen", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Studiedoelen_Gebruikers_GebruikerId",
+                        name: "FK_StudieDoelen_Gebruikers_GebruikerId",
                         column: x => x.GebruikerId,
                         principalTable: "Gebruikers",
                         principalColumn: "Id",
@@ -89,20 +90,21 @@ namespace FocusDesk.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sessienotities",
+                name: "SessieNotities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Inhoud = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AangemaaktOp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StudiesessieId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sessienotities", x => x.Id);
+                    table.PrimaryKey("PK_SessieNotities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Sessienotities_Studiesessies_StudiesessieId",
+                        name: "FK_SessieNotities_Studiesessies_StudiesessieId",
                         column: x => x.StudiesessieId,
                         principalTable: "Studiesessies",
                         principalColumn: "Id",
@@ -110,13 +112,13 @@ namespace FocusDesk.API.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sessienotities_StudiesessieId",
-                table: "Sessienotities",
+                name: "IX_SessieNotities_StudiesessieId",
+                table: "SessieNotities",
                 column: "StudiesessieId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Studiedoelen_GebruikerId",
-                table: "Studiedoelen",
+                name: "IX_StudieDoelen_GebruikerId",
+                table: "StudieDoelen",
                 column: "GebruikerId");
 
             migrationBuilder.CreateIndex(
@@ -134,10 +136,10 @@ namespace FocusDesk.API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Sessienotities");
+                name: "SessieNotities");
 
             migrationBuilder.DropTable(
-                name: "Studiedoelen");
+                name: "StudieDoelen");
 
             migrationBuilder.DropTable(
                 name: "Studiesessies");
