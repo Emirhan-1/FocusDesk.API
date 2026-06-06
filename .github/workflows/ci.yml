@@ -5,9 +5,13 @@ on:
     branches:
       - main
       - master
-      
+  pull_request:
+    branches:
+      - main
+      - master
+
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +26,10 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build --no-restore --configuration Release
 
-      - name: Skip tests for now
-        run: echo "No tests yet"
+      - name: Run tests
+        run: dotnet test --no-build --configuration Release --verbosity normal
+
+      - name: Build geslaagd
+        run: echo "Build en tests succesvol afgerond"

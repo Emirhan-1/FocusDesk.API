@@ -3,27 +3,29 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
-using FocusDesk.API;
 using FocusDesk.API.Services;
-using FocusDesk.API.Data; // Add this using directive for AppDbContext
+using FocusDesk.API.Data;
+using FocusDesk.API.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddControllers();
-
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
         "Server=(localdb)\\mssqllocaldb;Database=FocusDeskDb;Trusted_Connection=True;"
     ));
 
+// Repositories
+builder.Services.AddScoped<IStudiesessieRepository, StudiesessieRepository>();
+builder.Services.AddScoped<IStudieDoelRepository, StudieDoelRepository>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
+
 // Services
 builder.Services.AddScoped<AuthService>();
-
 builder.Services.AddScoped<StudieDoelService>();
-
 builder.Services.AddScoped<StudiesessieService>();
+builder.Services.AddScoped<TagService>();
 
 // CORS
 builder.Services.AddCors(options =>
@@ -51,10 +53,8 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
         )
@@ -63,7 +63,6 @@ builder.Services.AddAuthentication(options =>
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -71,7 +70,6 @@ builder.Services.AddSwaggerGen(options =>
         Title = "FocusDesk API",
         Version = "v1"
     });
-
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -81,7 +79,6 @@ builder.Services.AddSwaggerGen(options =>
         In = ParameterLocation.Header,
         Description = "Voer hier je JWT token in."
     });
-
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -100,7 +97,6 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -108,15 +104,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// CORS
 app.UseCors("AllowFrontend");
-
-// Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Controllers
 app.MapControllers();
-
 app.Run();

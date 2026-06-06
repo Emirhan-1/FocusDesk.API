@@ -7,5 +7,6 @@
         public int Duur { get; set; }
         public int GebruikerId { get; set; }
         public int? TagId { get; set; }
+        public int? StudieDoelId { get; set; }
     }
-}     
+}

@@ -165,10 +165,10 @@ C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\obj\Debug\net8.0\stati
 C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\obj\Debug\net8.0\FocusDes.D5CE88A3.Up2Date
 C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\obj\Debug\net8.0\FocusDesk.API.dll
 C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\obj\Debug\net8.0\refint\FocusDesk.API.dll
 C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\obj\Debug\net8.0\FocusDesk.API.pdb
 C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\obj\Debug\net8.0\FocusDesk.API.genruntimeconfig.cache
 C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\obj\Debug\net8.0\ref\FocusDesk.API.dll
+C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.InMemory.dll

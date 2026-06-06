@@ -1,33 +1,30 @@
-﻿using FocusDesk.API.Data;
-using FocusDesk.API.DTOs;
+﻿using FocusDesk.API.DTOs;
 using FocusDesk.API.Models;
-using Microsoft.EntityFrameworkCore;
+using FocusDesk.API.Repositories;
 
 namespace FocusDesk.API.Services;
 
 public class StudiesessieService
 {
-    private readonly AppDbContext _context;
+    private readonly IStudiesessieRepository _repository;
+    private readonly IStudieDoelRepository _studieDoelRepository;
 
-    public StudiesessieService(AppDbContext context)
+    public StudiesessieService(
+        IStudiesessieRepository repository,
+        IStudieDoelRepository studieDoelRepository)
     {
-        _context = context;
+        _repository = repository;
+        _studieDoelRepository = studieDoelRepository;
     }
 
     public async Task<List<Studiesessie>> GetAll()
     {
-        return await _context.Studiesessies
-            .Include(s => s.Notities)
-            .Include(s => s.Tag)
-            .ToListAsync();
+        return await _repository.GetAll();
     }
 
     public async Task<Studiesessie?> GetById(int id)
     {
-        return await _context.Studiesessies
-            .Include(s => s.Notities)
-            .Include(s => s.Tag)
-            .FirstOrDefaultAsync(s => s.Id == id);
+        return await _repository.GetById(id);
     }
 
     public async Task<Studiesessie> Create(MaakStudieSessieDTO dto)
@@ -38,57 +35,47 @@ public class StudiesessieService
             Eindtijd = dto.Eindtijd,
             Duur = dto.Duur,
             GebruikerId = dto.GebruikerId,
-            TagId = dto.TagId
+            TagId = dto.TagId,
+            StudieDoelId = dto.StudieDoelId
         };
 
-        _context.Studiesessies.Add(sessie);
+        var result = await _repository.Create(sessie);
 
-        await _context.SaveChangesAsync();
-
-        return sessie;
-    }
-
-    public async Task<bool> Delete(int id)
-    {
-        var sessie = await _context.Studiesessies.FindAsync(id);
-
-        if (sessie == null)
+        // Automatisch BestedeUren ophogen als sessie gekoppeld is aan een doel
+        if (dto.StudieDoelId.HasValue)
         {
-            return false;
+            var doel = await _studieDoelRepository.GetById(dto.StudieDoelId.Value);
+            if (doel != null)
+            {
+                doel.BestedeUren += dto.Duur / 60; // minuten naar uren
+                await _studieDoelRepository.Update(doel);
+            }
         }
 
-        _context.Studiesessies.Remove(sessie);
-
-        await _context.SaveChangesAsync();
-
-        return true;
+        return result;
     }
 
-    public async Task<Studiesessie?> Update(
-        int id,
-        BewerkStudiesessieDTO dto)
+    public async Task<Studiesessie?> Update(int id, BewerkStudiesessieDTO dto)
     {
-        var sessie = await _context.Studiesessies
-            .FindAsync(id);
-
-        if (sessie == null)
-        {
-            return null;
-        }
+        var sessie = await _repository.GetById(id);
+        if (sessie == null) return null;
 
         sessie.Starttijd = dto.Starttijd;
         sessie.Eindtijd = dto.Eindtijd;
         sessie.Duur = dto.Duur;
         sessie.TagId = dto.TagId;
+        sessie.StudieDoelId = dto.StudieDoelId;
 
-        await _context.SaveChangesAsync();
+        return await _repository.Update(sessie);
+    }
 
-        return sessie;
+    public async Task<bool> Delete(int id)
+    {
+        return await _repository.Delete(id);
     }
 
     public async Task<int> GetTotaleStudietijd()
     {
-        return await _context.Studiesessies
-            .SumAsync(s => s.Duur);
+        return await _repository.GetTotaleStudietijd();
     }
 }

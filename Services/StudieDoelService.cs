@@ -1,28 +1,26 @@
-﻿using FocusDesk.API.Data;
-using FocusDesk.API.DTOs;
+﻿using FocusDesk.API.DTOs;
 using FocusDesk.API.Models;
-using Microsoft.EntityFrameworkCore;
+using FocusDesk.API.Repositories;
+
 namespace FocusDesk.API.Services;
 
 public class StudieDoelService
 {
-    private readonly AppDbContext _context;
+    private readonly IStudieDoelRepository _repository;
 
-    public StudieDoelService(AppDbContext context)
+    public StudieDoelService(IStudieDoelRepository repository)
     {
-        _context = context;
+        _repository = repository;
     }
 
     public async Task<List<StudieDoel>> GetAll()
     {
-        return await _context.StudieDoelen
-            .ToListAsync();
+        return await _repository.GetAll();
     }
 
     public async Task<StudieDoel?> GetById(int id)
     {
-        return await _context.StudieDoelen
-            .FirstOrDefaultAsync(d => d.Id == id);
+        return await _repository.GetById(id);
     }
 
     public async Task<StudieDoel> Create(MaakStudieDoelDTO dto)
@@ -31,30 +29,41 @@ public class StudieDoelService
         {
             Titel = dto.Titel,
             DoelUren = dto.DoelUren,
-            GebruikerId = dto.GebruikerId
+            GebruikerId = dto.GebruikerId,
+            BestedeUren = 0
         };
+        return await _repository.Create(doel);
+    }
 
-        _context.StudieDoelen.Add(doel);
+    public async Task<StudieDoel?> Update(int id, BewerkStudieDoelDTO dto)
+    {
+        var doel = await _repository.GetById(id);
+        if (doel == null) return null;
 
-        await _context.SaveChangesAsync();
+        doel.Titel = dto.Titel;
+        doel.DoelUren = dto.DoelUren;
 
-        return doel;
+        return await _repository.Update(doel);
+    }
+
+    public async Task<StudieDoel?> VoegUrenToe(int id, int uren)
+    {
+        var doel = await _repository.GetById(id);
+        if (doel == null) return null;
+
+        doel.BestedeUren += uren;
+        return await _repository.Update(doel);
+    }
+
+    public int BerekenPercentage(StudieDoel doel)
+    {
+        if (doel.DoelUren == 0) return 0;
+        var percentage = (int)Math.Round((double)doel.BestedeUren / doel.DoelUren * 100);
+        return Math.Min(percentage, 100);
     }
 
     public async Task<bool> Delete(int id)
     {
-        var doel = await _context.StudieDoelen
-            .FindAsync(id);
-
-        if (doel == null)
-        {
-            return false;
-        }
-
-        _context.StudieDoelen.Remove(doel);
-
-        await _context.SaveChangesAsync();
-
-        return true;
+        return await _repository.Delete(id);
     }
 }

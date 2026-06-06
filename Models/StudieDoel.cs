@@ -10,5 +10,8 @@ public class StudieDoel
 
     public int GebruikerId { get; set; }
 
-    public Gebruiker Gebruiker { get; set; } = null!;
+    public Gebruiker? Gebruiker { get; set; }
+
+    public int BestedeUren { get; set; } = 0;
+
 }

@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using FocusDesk.API.Data;
+using Microsoft.Extensions.Configuration;
 
 namespace FocusDesk.API.Services;
 
