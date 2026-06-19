@@ -23,6 +23,16 @@ public class AuthService
 
     public async Task<bool> Register(RegisterDTO dto)
     {
+        return await RegisterMetRol(dto, "Student");
+    }
+
+    public async Task<bool> RegisterCoach(RegisterDTO dto)
+    {
+        return await RegisterMetRol(dto, "Coach");
+    }
+
+    private async Task<bool> RegisterMetRol(RegisterDTO dto, string rol)
+    {
         var bestaatAl = await _context.Gebruikers
             .AnyAsync(g => g.Email == dto.Email);
 
@@ -35,13 +45,11 @@ public class AuthService
         {
             Email = dto.Email,
             WachtwoordHash = BCrypt.Net.BCrypt.HashPassword(dto.Wachtwoord),
-            Rol = "Student"
+            Rol = rol
         };
 
         _context.Gebruikers.Add(gebruiker);
-
         await _context.SaveChangesAsync();
-
         return true;
     }
 

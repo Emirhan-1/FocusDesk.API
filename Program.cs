@@ -20,12 +20,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IStudiesessieRepository, StudiesessieRepository>();
 builder.Services.AddScoped<IStudieDoelRepository, StudieDoelRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddScoped<ICoachRepository, CoachRepository>();
 
 // Services
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<StudieDoelService>();
 builder.Services.AddScoped<StudiesessieService>();
 builder.Services.AddScoped<TagService>();
+builder.Services.AddScoped<CoachService>();
+
 
 // CORS
 builder.Services.AddCors(options =>
