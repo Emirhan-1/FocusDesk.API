@@ -105,4 +105,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ toLower(github.repository_owner) }}/focusdesk-api:latest
+          tags: ghcr.io/emirhan-1/focusdesk-api:latest
