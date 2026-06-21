@@ -172,3 +172,4 @@ C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\obj\Debug\net8.0\refin
 C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\obj\Debug\net8.0\FocusDesk.API.pdb
 C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\obj\Debug\net8.0\FocusDesk.API.genruntimeconfig.cache
 C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\obj\Debug\net8.0\ref\FocusDesk.API.dll
+C:\Users\Emirhan\source\repos\FocusDesk.API\FocusDesk.API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
